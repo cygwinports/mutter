@@ -1,0 +1,54 @@
+--- origsrc/mutter-2.28.0/configure.in	2009-10-07 16:39:15.000000000 -0500
++++ src/mutter-2.28.0/configure.in	2009-11-11 22:39:31.185193800 -0600
+@@ -484,7 +484,7 @@ fi
+ 
+ # Warnings are there for a reason
+ if test "x$GCC" = "xyes"; then
+-  CFLAGS="$CFLAGS -Wall -Werror -ansi"
++  CFLAGS="$CFLAGS -Wall"
+ fi
+ 
+ # Use gnome-doc-utils:
+--- origsrc/mutter-2.28.0/src/Makefile.am	2009-10-02 14:50:14.000000000 -0500
++++ src/mutter-2.28.0/src/Makefile.am	2009-11-12 01:44:07.738421000 -0600
+@@ -3,7 +3,7 @@
+ 
+ lib_LTLIBRARIES = libmutter-private.la
+ 
+-SUBDIRS=wm-tester tools compositor/plugins
++SUBDIRS=wm-tester tools . compositor/plugins
+ 
+ INCLUDES=@MUTTER_CFLAGS@ -I $(srcdir)/include -I$(srcdir)/compositor -DMUTTER_LIBEXECDIR=\"$(libexecdir)\" -DHOST_ALIAS=\"@HOST_ALIAS@\" -DMUTTER_LOCALEDIR=\"$(prefix)/@DATADIRNAME@/locale\" -DMUTTER_PKGDATADIR=\"$(pkgdatadir)\" -DMUTTER_DATADIR=\"$(datadir)\" -DG_LOG_DOMAIN=\"mutter\" -DSN_API_NOT_YET_FROZEN=1 -DMUTTER_MAJOR_VERSION=$(MUTTER_MAJOR_VERSION) -DMUTTER_MINOR_VERSION=$(MUTTER_MINOR_VERSION) -DMUTTER_MICRO_VERSION=$(MUTTER_MICRO_VERSION) -DMUTTER_PLUGIN_API_VERSION=$(MUTTER_PLUGIN_API_VERSION) -DMUTTER_PKGLIBDIR=\"$(pkglibdir)\" -DMUTTER_PLUGIN_DIR=\"@MUTTER_PLUGIN_DIR@\"
+ 
+@@ -200,7 +200,7 @@ typelib_DATA = Meta-$(api_version).typel
+ 
+ # We need to strip out the attribute that would point back to libmutter-introspect
+ # so that libgirepository looks for symbols in the executable instead
+-Meta-$(api_version).gir: $(G_IR_SCANNER) mutter $(libmutterinclude_HEADERS) $(mutter_SOURCES)
++Meta-$(api_version).gir: $(G_IR_SCANNER) mutter$(EXEEXT) $(libmutterinclude_HEADERS) $(mutter_SOURCES)
+ 	$(AM_V_GEN) pwd=`pwd` ;				\
+         cd $(srcdir) &&					\
+ 	$(G_IR_SCANNER)					\
+@@ -213,7 +213,7 @@ Meta-$(api_version).gir: $(G_IR_SCANNER)
+ 		--pkg=clutter-1.0			\
+ 		--pkg=gtk+-2.0				\
+ 		--include=xfixes-4.0			\
+-		--program=$$pwd/mutter			\
++		--program=$$pwd/mutter$(EXEEXT)			\
+ 		$(filter %.c,$(mutter_SOURCES))		\
+ 		$(libmutterinclude_base_headers)	\
+ 		$(INCLUDES)				\
+--- origsrc/mutter-2.28.0/src/compositor/plugins/Makefile.am	2009-08-05 16:53:31.000000000 -0500
++++ src/mutter-2.28.0/src/compositor/plugins/Makefile.am	2009-11-11 22:46:20.047306700 -0600
+@@ -3,10 +3,9 @@ pkglibdir=@MUTTER_PLUGIN_DIR@
+ 
+ INCLUDES=@MUTTER_CFLAGS@ -I $(top_srcdir)/src/include -DMUTTER_LIBEXECDIR=\"$(libexecdir)\" -DHOST_ALIAS=\"@HOST_ALIAS@\" -DMUTTER_LOCALEDIR=\"$(prefix)/@DATADIRNAME@/locale\" -DMUTTER_PKGDATADIR=\"$(pkgdatadir)\" -DMUTTER_DATADIR=\"$(datadir)\" -DG_LOG_DOMAIN=\"mutter\" -DSN_API_NOT_YET_FROZEN=1 -DMUTTER_MAJOR_VERSION=$(MUTTER_MAJOR_VERSION) -DMUTTER_MINOR_VERSION=$(MUTTER_MINOR_VERSION) -DMUTTER_MICRO_VERSION=$(MUTTER_MICRO_VERSION) -DMUTTER_PLUGIN_API_VERSION=$(MUTTER_PLUGIN_API_VERSION) -DMUTTER_PLUGIN_DIR=\"@MUTTER_PLUGIN_DIR@\"
+ 
+-default_la_CFLAGS   = -fPIC
+ default_la_SOURCES  = default.c
+ default_la_LDFLAGS  = -module -avoid-version -no-undefined
+-default_la_LIBADD   = @CLUTTER_LIBS@
++default_la_LIBADD   = @CLUTTER_LIBS@
+ 
+ pkglib_LTLIBRARIES = default.la
+ 

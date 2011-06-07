@@ -1,0 +1,5 @@
+category: Gnome X11
+requires: mutter libclutter1.0-devel libgdk_pixbuf2.0-devel libglib2.0-devel libgtk3-devel gettext libpango1.0-devel
+external-source: mutter
+sdesc: "GNOME compositing desktop window manager (development)"
+ldesc: "Window manager used primarily by the GNOME Desktop."

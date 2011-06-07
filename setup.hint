@@ -1,0 +1,4 @@
+category: Gnome X11
+requires: GConf2 libatk1.0_0 libcairo2 libcanberra-gtk3_0 libcanberra0 libclutter1.0_0 libgconf2_4 libgdk_pixbuf2.0_0 libgirepository1.0_1 libGL1 libglib2.0_0 libgtk3_0 libICE6 libintl8 libpango1.0_0 libSM6 libstartup-notification1_0 libX11_6 libXcomposite1 libXcursor1 libXdamage1 libXext6 libXfixes3 libXinerama1 libXrandr2 libXrender1 zenity
+sdesc: "GNOME compositing desktop window manager"
+ldesc: "Window manager used primarily by the GNOME Desktop."

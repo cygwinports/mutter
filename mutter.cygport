@@ -1,0 +1,15 @@
+inherit gnome2
+
+NAME="mutter"
+VERSION=3.6.2
+RELEASE=1
+CATEGORY="GNOME"
+SUMMARY="GNOME compositing desktop window manager"
+DESCRIPTION="Window manager used primarily by the GNOME Desktop."
+REQUIRES="girepository-Clutter1.0 girepository-Gtk3.0 zenity"
+
+PATCH_URI="3.0.0-no-undefined.patch"
+
+PKG_NAMES="${PN} ${PN}-devel"
+mutter_CONTENTS="etc/ usr/bin/ usr/lib/mutter/ usr/share/"
+mutter_devel_CONTENTS="usr/include/ usr/lib/lib* usr/lib/pkgconfig/"

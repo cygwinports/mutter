@@ -1,0 +1,25 @@
+core/window.c: In function ‘find_monitor_by_winsys_id’:
+core/window.c:3492:27: error: comparison between signed and unsigned integer expressions [-Werror=sign-compare]
+core/window.c: In function ‘meta_window_move_resize_internal’:
+core/window.c:3703:28: error: comparison between signed and unsigned integer expressions [-Werror=sign-compare]
+
+--- origsrc/mutter-3.14.4/src/core/window.c	2015-03-23 11:49:32.000000000 -0500
++++ src/mutter-3.14.4/src/core/window.c	2015-07-16 19:27:58.264916200 -0500
+@@ -3481,7 +3481,7 @@ meta_window_get_monitor (MetaWindow *win
+ 
+ static MetaMonitorInfo *
+ find_monitor_by_winsys_id (MetaWindow *window,
+-                           guint       winsys_id)
++                           gint        winsys_id)
+ {
+   int i;
+ 
+@@ -3602,7 +3602,7 @@ meta_window_move_resize_internal (MetaWi
+    */
+ 
+   gboolean did_placement;
+-  guint old_output_winsys_id;
++  gint old_output_winsys_id;
+   MetaRectangle unconstrained_rect;
+   MetaRectangle constrained_rect;
+   MetaMoveResizeResultFlags result = 0;

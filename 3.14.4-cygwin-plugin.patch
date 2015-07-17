@@ -1,0 +1,36 @@
+--- origsrc/mutter-3.14.4/src/Makefile.am	2015-03-23 11:49:32.000000000 -0500
++++ src/mutter-3.14.4/src/Makefile.am	2015-07-16 17:48:04.139758900 -0500
+@@ -3,7 +3,7 @@
+ 
+ lib_LTLIBRARIES = libmutter.la
+ 
+-SUBDIRS=compositor/plugins
++SUBDIRS= . compositor/plugins
+ 
+ EXTRA_DIST =
+ 
+--- origsrc/mutter-3.14.4/src/compositor/meta-plugin-manager.c	2014-10-02 09:29:20.000000000 -0500
++++ src/mutter-3.14.4/src/compositor/meta-plugin-manager.c	2015-07-16 17:48:04.152260500 -0500
+@@ -63,7 +63,7 @@ meta_plugin_manager_load (const gchar
+   if (g_path_is_absolute (plugin_name))
+     path = g_strdup (plugin_name);
+   else
+-    path = g_strconcat (dpath, plugin_name, ".so", NULL);
++    path = g_strconcat (dpath, plugin_name, "." G_MODULE_SUFFIX, NULL);
+ 
+   module = g_object_new (META_TYPE_MODULE, "path", path, NULL);
+   if (!module || !g_type_module_use (G_TYPE_MODULE (module)))
+--- origsrc/mutter-3.14.4/src/compositor/plugins/Makefile.am	2015-03-23 11:49:32.000000000 -0500
++++ src/mutter-3.14.4/src/compositor/plugins/Makefile.am	2015-07-16 17:48:04.155260900 -0500
+@@ -13,10 +13,9 @@ AM_CPPFLAGS = \
+ 	-DSN_API_NOT_YET_FROZEN=1					\
+ 	-DMUTTER_PLUGIN_DIR=\"$(MUTTER_PLUGIN_DIR)\"
+ 
+-default_la_CFLAGS   = -fPIC
+ default_la_SOURCES  = default.c
+ default_la_LDFLAGS  = -module -avoid-version -no-undefined
+-default_la_LIBADD   = $(CLUTTER_LIBS)
++default_la_LIBADD   = $(top_builddir)/src/libmutter.la $(CLUTTER_LIBS)
+ 
+ pkglib_LTLIBRARIES = default.la
+ 

@@ -1,0 +1,122 @@
+--- origsrc/mutter-3.14.4/configure.ac	2015-03-23 12:40:19.000000000 -0500
++++ src/mutter-3.14.4/configure.ac	2015-07-16 17:48:04.133258100 -0500
+@@ -78,7 +78,6 @@ MUTTER_PC_MODULES="
+    gsettings-desktop-schemas >= 3.7.3
+    $CLUTTER_PACKAGE >= 1.19.5
+    cogl-1.0 >= 1.17.1
+-   upower-glib >= 0.99.0
+    gnome-desktop-3.0
+    xcomposite >= 0.2
+    xcursor
+@@ -110,6 +109,11 @@ AC_ARG_ENABLE(sm,
+                  [disable mutter's session management support, for embedded/size-sensitive custom non-GNOME builds]),,
+   enable_sm=auto)
+ 
++AC_ARG_ENABLE(upower,
++  AC_HELP_STRING([--disable-upower],
++                 [disable mutter's laptop lid detection support, for embedded/size-sensitive custom non-GNOME builds]),,
++  enable_upower=auto)
++
+ AC_ARG_ENABLE(startup-notification,
+   AC_HELP_STRING([--disable-startup-notification],
+                  [disable mutter's startup notification support, for embedded/size-sensitive custom non-GNOME builds]),,
+@@ -137,6 +141,33 @@ AM_CONDITIONAL(BUILDOPT_INSTALL_TESTS, t
+ GNOME_KEYBINDINGS_KEYSDIR="${datadir}/gnome-control-center/keybindings"
+ AC_SUBST(GNOME_KEYBINDINGS_KEYSDIR)
+ 
++UPOWER_GLIB_VERSION=0.99.0
++AC_MSG_CHECKING([UPower GLib library >= $UPOWER_GLIB_VERSION])
++if $PKG_CONFIG --atleast-version $UPOWER_GLIB_VERSION upower-glib; then
++   have_upower_glib=yes
++else
++   have_upower_glib=no
++fi
++AC_MSG_RESULT($have_upower_glib)
++
++if test x$enable_upower = xyes; then
++   have_upower_glib=yes
++   echo "UPower support forced on"
++elif test x$enable_upower = xauto; then
++   true
++else
++   have_upower_glib=no
++fi
++
++if test x$have_upower_glib = xyes; then
++  echo "Building with upower-glib"
++  MUTTER_PC_MODULES="$MUTTER_PC_MODULES upower-glib >= $UPOWER_GLIB_VERSION"
++  AC_DEFINE(HAVE_UPOWER_GLIB, , [Building with UPower support])
++else
++  echo "Building without upower-glib"
++fi
++
++
+ STARTUP_NOTIFICATION_VERSION=0.7
+ AC_MSG_CHECKING([Startup notification library >= $STARTUP_NOTIFICATION_VERSION])
+ if $PKG_CONFIG --atleast-version $STARTUP_NOTIFICATION_VERSION libstartup-notification-1.0; then
+--- origsrc/mutter-3.14.4/src/backends/meta-monitor-config.c	2015-03-23 11:49:32.000000000 -0500
++++ src/mutter-3.14.4/src/backends/meta-monitor-config.c	2015-07-16 17:48:04.149260200 -0500
+@@ -38,7 +38,9 @@
+ 
+ #include <string.h>
+ #include <clutter/clutter.h>
++#ifdef HAVE_UPOWER_GLIB
+ #include <libupower-glib/upower.h>
++#endif
+ 
+ #include <meta/main.h>
+ #include <meta/errors.h>
+@@ -84,7 +86,9 @@ struct _MetaMonitorConfig {
+   GFile *file;
+   GCancellable *save_cancellable;
+ 
++#ifdef HAVE_UPOWER_GLIB
+   UpClient *up_client;
++#endif
+   gboolean lid_is_closed;
+ };
+ 
+@@ -99,9 +103,11 @@ static gboolean meta_monitor_config_assi
+                                                   GPtrArray          *crtcs,
+                                                   GPtrArray          *outputs);
+ 
++#ifdef HAVE_UPOWER_GLIB
+ static void     power_client_changed_cb (UpClient   *client,
+                                          GParamSpec *pspec,
+                                          gpointer    user_data);
++#endif
+ 
+ static void
+ free_output_key (MetaOutputKey *key)
+@@ -230,11 +236,15 @@ meta_monitor_config_init (MetaMonitorCon
+   self->file = g_file_new_for_path (path);
+   g_free (path);
+ 
++#ifdef HAVE_UPOWER_GLIB
+   self->up_client = up_client_new ();
+   self->lid_is_closed = up_client_get_lid_is_closed (self->up_client);
+ 
+   g_signal_connect_object (self->up_client, "notify::lid-is-closed",
+                            G_CALLBACK (power_client_changed_cb), self, 0);
++#else
++  self->lid_is_closed = FALSE;
++#endif
+ }
+ 
+ static void
+@@ -1364,6 +1374,7 @@ meta_monitor_config_restore_previous (Me
+     }
+ }
+ 
++#ifdef HAVE_UPOWER_GLIB
+ static void
+ turn_off_laptop_display (MetaMonitorConfig  *self,
+                          MetaMonitorManager *manager)
+@@ -1399,6 +1410,7 @@ power_client_changed_cb (UpClient   *cli
+         meta_monitor_config_restore_previous (self, manager);
+     }
+ }
++#endif
+ 
+ typedef struct {
+   MetaMonitorConfig *config;

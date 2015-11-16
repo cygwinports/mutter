@@ -1,0 +1,12 @@
+for roundf(3)
+
+--- origsrc/mutter-3.18.2/src/backends/meta-cursor-renderer.c	2015-10-15 13:42:44.000000000 -0500
++++ src/mutter-3.18.2/src/backends/meta-cursor-renderer.c	2015-11-16 10:30:27.354597800 -0600
+@@ -29,6 +29,7 @@
+ #include <meta/meta-backend.h>
+ #include <meta/util.h>
+ 
++#include <math.h>
+ #include <cogl/cogl.h>
+ #include <clutter/clutter.h>
+ 

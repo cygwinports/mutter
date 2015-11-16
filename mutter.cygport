@@ -1,7 +1,7 @@
 inherit gnome2
 
 NAME="mutter"
-VERSION=3.14.4
+VERSION=3.18.2
 RELEASE=1
 CATEGORY="GNOME"
 SUMMARY="GNOME compositing desktop window manager"
@@ -10,11 +10,11 @@ DESCRIPTION="Window manager used primarily by the GNOME Desktop."
 PATCH_URI="
 	3.14.4-cygwin-plugin.patch
 	3.14.4-disable-upower.patch
-	3.14.4-without-native-backend.patch
 	${ARCH_i686+3.14.4-32bit-compile.patch}
+	3.18.2-cygwin-compile.patch
 "
 
-PKG_NAMES="${NAME} ${NAME}-devel ${NAME}-doc"
+PKG_NAMES="${NAME} ${NAME}-devel" # ${NAME}-doc"
 mutter_REQUIRES="girepository-Clutter1.0 girepository-Gtk3.0 gsettings-desktop-schemas zenity"
 mutter_CONTENTS="--exclude=gtk-doc etc/ usr/bin/ usr/lib/mutter/ usr/libexec/ usr/share/"
 mutter_devel_CONTENTS="usr/include/ usr/lib/lib* usr/lib/pkgconfig/"

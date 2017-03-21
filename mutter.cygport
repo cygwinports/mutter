@@ -1,7 +1,7 @@
 inherit gnome2
 
 NAME="mutter"
-VERSION=3.18.4
+VERSION=3.22.3
 RELEASE=1
 CATEGORY="GNOME"
 SUMMARY="GNOME compositing desktop window manager"
@@ -12,11 +12,38 @@ PATCH_URI="
 	3.14.4-disable-upower.patch
 	${ARCH_i686+3.14.4-32bit-compile.patch}
 	3.18.2-cygwin-compile.patch
+	3.22.3-no-undefined.patch
 "
 
 PKG_NAMES="${NAME} ${NAME}-devel" # ${NAME}-doc"
-mutter_REQUIRES="girepository-Clutter1.0 girepository-Gtk3.0 gsettings-desktop-schemas zenity"
-mutter_CONTENTS="--exclude=gtk-doc usr/bin/ usr/lib/mutter/ usr/libexec/ usr/share/"
-mutter_devel_CONTENTS="usr/include/ usr/lib/lib* usr/lib/pkgconfig/"
+mutter_REQUIRES="girepository-cairo1.0 girepository-Gtk3.0 girepository-Json1.0 girepository-x11 gsettings-desktop-schemas zenity"
+mutter_CONTENTS="
+	--exclude=gtk-doc
+	usr/bin/
+	usr/lib/mutter/*.gir
+	usr/lib/mutter/*.typelib
+	usr/lib/mutter/plugins/
+	usr/libexec/
+	usr/share/
+"
+mutter_devel_CONTENTS="
+	usr/include/mutter/
+	usr/lib/libmutter*.dll.a
+	usr/lib/mutter/libmutter*.dll.a
+	usr/lib/pkgconfig/*
+"
 mutter_doc_CATEGORY="Doc"
 mutter_doc_CONTENTS="usr/share/gtk-doc/"
+
+# mutter now bundles its own cogl and clutter.  Seriously.
+CYGCONF_ARGS="
+	--enable-gl
+	--disable-gles1
+	--disable-gles2
+	--enable-glx
+	--disable-kms-egl-platform
+	--with-gl-libname=cygGL-1.dll
+	COGL_EXTRA_LDFLAGS=-no-undefined
+
+	--disable-wayland-egl-server
+"

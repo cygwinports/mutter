@@ -1,9 +1,9 @@
 --- origsrc/mutter-3.14.4/configure.ac	2015-03-23 12:40:19.000000000 -0500
 +++ src/mutter-3.14.4/configure.ac	2015-07-16 17:48:04.133258100 -0500
 @@ -78,7 +78,6 @@ MUTTER_PC_MODULES="
-    gsettings-desktop-schemas >= 3.7.3
-    $CLUTTER_PACKAGE >= 1.19.5
-    cogl-1.0 >= 1.17.1
+    cairo >= 1.10.0
+    gsettings-desktop-schemas >= 3.21.4
+    json-glib-1.0
 -   upower-glib >= 0.99.0
     gnome-desktop-3.0
     xcomposite >= 0.2

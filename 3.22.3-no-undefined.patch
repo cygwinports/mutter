@@ -1,0 +1,11 @@
+--- origsrc/mutter-3.22.3/clutter/configure.ac	2017-02-16 10:24:00.000000000 -0600
++++ src/mutter-3.22.3/clutter/configure.ac	2017-02-16 10:24:00.000000000 -0600
+@@ -76,7 +76,7 @@ CLUTTER_LT_CURRENT=lt_current
+ CLUTTER_LT_REV=lt_revision
+ CLUTTER_LT_AGE=lt_age
+ CLUTTER_LT_VERSION="$CLUTTER_LT_CURRENT:$CLUTTER_LT_REV:$CLUTTER_LT_AGE"
+-CLUTTER_LT_LDFLAGS="-avoid-version"
++CLUTTER_LT_LDFLAGS="-avoid-version -no-undefined"
+ AC_SUBST([CLUTTER_LT_CURRENT],  [lt_current])
+ AC_SUBST([CLUTTER_LT_REVISION], [lt_revision])
+ AC_SUBST([CLUTTER_LT_VERSION],  [$CLUTTER_LT_VERSION])
